@@ -1,5 +1,7 @@
 package org.launchcode.javawebdevtechjobsauthentication.controllers;
 
+import org.launchcode.javawebdevtechjobsauthentication.models.Employer;
+import org.launchcode.javawebdevtechjobsauthentication.models.data.EmployerRepository;
 import org.launchcode.javawebdevtechjobsauthentication.models.data.JobRepository;
 import org.launchcode.javawebdevtechjobsauthentication.models.Job;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,17 +31,30 @@ public class HomeController {
 
     @GetMapping("add")
     public String displayAddJobForm(Model model) {
+        model.addAttribute("title", "Add Job");
+        model.addAttribute("employer", EmployerRepository.findAll());
         model.addAttribute(new Job());
         return "add";
     }
 
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                       Errors errors) {
+                                       Errors errors, Model model, @RequestParam int employerId,
+                                    @RequestParam List<Integer> skills) {
 
         if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Job");
             return "add";
         }
+
+        Optional<Employer> result = EmployerRepository.findById(employerId);
+        if (result.isEmpty()) {
+            return "add";
+        }
+
+        Employer employer = result.get();
+        newJob.setEmployer(employer);
+        return "redirect:";
 
         jobRepository.save(newJob);
         return "redirect:";
