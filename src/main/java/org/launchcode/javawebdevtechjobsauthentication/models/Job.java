@@ -3,39 +3,45 @@ package org.launchcode.javawebdevtechjobsauthentication.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 
 @Entity
 public class Job extends AbstractEntity{
 
-    @NotNull
-    @Size(min=3, max=50)
-    private String name;
-    private String employer;
-    private String skill;
+    @ManyToOne
+    private Employer employer;
 
-    public Job() {
+    private String skills;
+
+    public Job() {};
+
+    public Job(Employer anEmployer, String someSkills) {
+        super();
+        this.employer = anEmployer;
+        this.skills = someSkills;
     }
+
+//    private String employer;
+//    private String skill;
+//
+//    public List<Job> getJobs() {
+//        return jobs;
+//    }
+//
+//    public void setJobs(List<Job> jobs) {
+//        this.jobs = jobs;
+//    }
+//
+//    public Job() {
+//        super();
+//    }
 
     // Initialize the id and value fields.
-    public Job(String aName, String anEmployer, String someSkill) {
-        super();
-        this.name = aName;
-        this.employer = anEmployer;
-        this.skill = someSkill;
-    }
 
     // Getters and setters.
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmployer() {
-        return employer;
+        return Employer;
     }
 
     public void setEmployer(String employer) {
@@ -43,15 +49,11 @@ public class Job extends AbstractEntity{
     }
 
     public String getSkill() {
-        return skill;
+        return skills;
     }
 
     public void setSkill(String skill) {
-        this.skill = skill;
+        this.skills = skill;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 }
